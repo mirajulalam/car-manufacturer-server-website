@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
 const app = express();
@@ -20,12 +20,21 @@ async function run() {
         await client.connect();
         const productsCollection = client.db('car_parts').collection('product');
 
+        // handle get all product load
         app.get('/product', async (req, res) => {
             const query = {};
             const cursor = productsCollection.find(query);
             const products = await cursor.toArray();
             res.send(products)
         })
+
+        // specific id product details
+        app.get('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const products = await productsCollection.findOne(query)
+            res.send(products)
+        });
     }
     finally {
 
