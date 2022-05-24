@@ -74,6 +74,19 @@ async function run() {
             const result = await ordersCollection.deleteOne(query)
             res.send(result)
         });
+
+
+        app.post("/review", async (req, res) => {
+            const review = req.body;
+            const result = await reviewsCollection.insertOne(review)
+            res.send(result)
+        });
+        // get all review
+        app.get("/review", async (req, res) => {
+            const result = await reviewsCollection.find().toArray();
+            res.send(result)
+        })
+
     }
     finally {
 
