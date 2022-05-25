@@ -37,6 +37,8 @@ async function run() {
         const ordersCollection = client.db('car_parts').collection('order');
         const userCollection = client.db('car_parts').collection('users');
         const reviewsCollection = client.db('car_parts').collection('review');
+        const userDetailsCollection = client.db('car_parts').collection('userdetail');
+
 
         app.get('/user', async (req, res) => {
             const users = await userCollection.find().toArray();
@@ -90,6 +92,13 @@ async function run() {
             res.send(products)
         });
 
+        // admin add product 
+        app.post("/product", async (req, res) => {
+            const product = req.body;
+            const result = await productsCollection.insertOne(product)
+            res.send(result)
+        });
+
         // specific email id user purchase data show
         app.get('/order/:email', async (req, res) => {
             const email = req.params.email;
@@ -119,9 +128,35 @@ async function run() {
             const result = await reviewsCollection.insertOne(review)
             res.send(result)
         });
+
         // get all review
         app.get("/review", async (req, res) => {
             const result = await reviewsCollection.find().toArray();
+            res.send(result)
+        })
+
+        // user update 
+        // app.put('userdetail', async (req, res) => {
+        //     const id = req.params.id;
+        //     const updateUser = req.body;
+        //     const filter = { _id: ObjectId(id) }
+        //     const options = { upsert: true }
+        //     const updateDoc = {
+        //         $set: {
+        //             name: updateUser.name,
+        //             email: updateUser.email,
+        //             education: updateUser.education,
+        //             location: updateUser.location,
+        //             link: updateUser.link
+        //         }
+        //     };
+
+        //     const result = await userDetailsCollection.updateOne(filter, updateDoc, options);
+        //     res.send(result)
+        // })
+        app.put('userdetail', async (req, res) => {
+            const user = req.body;
+            const result = await userDetailsCollection.insertOne(user)
             res.send(result)
         })
 
