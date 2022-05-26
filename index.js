@@ -205,10 +205,10 @@ async function run() {
         })
 
         // user update 
-        app.put('userdetail/:id', async (req, res) => {
-            const id = req.params.id;
+        app.put('/userdetail/:email', async (req, res) => {
+            const email = req.params.email;
             const updateUser = req.body;
-            const filter = { _id: ObjectId(id) }
+            const filter = { email: email }
             const options = { upsert: true }
             const updateDoc = {
                 $set: {
