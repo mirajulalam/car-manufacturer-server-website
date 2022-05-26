@@ -3,7 +3,8 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 
 
 const app = express();
@@ -29,6 +30,36 @@ function verifyJWT(req, res, next) {
         req.decoded = decoded;
         next()
     })
+}
+
+function sendPaymentConfirmationEmail(order) {
+    const { email, name, treatment, date, slot } = order;
+
+    var order = {
+        from: process.env.EMAIL_SENDER,
+        to: email,
+        subject: `Your Appointment for ${treatment} is confirmed`,
+        text: `Your Appointment for ${treatment} is confirmed`,
+        html: `
+        <div>
+        <p>Hello ${name},</p>
+        <h3>Your appoinment ${treatment} is confirmed</h3>
+        <p>Loking forward to seeying you you on ${date} as ${slot}</p>
+        <h3>Our address</h3>
+        <p>andor killa bandorban</p>
+        <p>bangledesh</p>
+        <a href="https://web.programming-hero.com/">unsubcribe</a>
+        </div>`
+    };
+
+    emailClient.sendMail(email, function (err, info) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log('Message sent: ', info);
+        }
+    });
 }
 
 async function run() {
@@ -174,29 +205,28 @@ async function run() {
         })
 
         // user update 
-        // app.put('userdetail/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const updateUser = req.body;
-        //     const filter = { _id: ObjectId(id) }
-        //     const options = { upsert: true }
-        //     const updateDoc = {
-        //         $set: {
-        //             name: updateUser.name,
-        //             email: updateUser.email,
-        //             education: updateUser.education,
-        //             location: updateUser.location,
-        //             link: updateUser.link
-        //         }
-        //     };
-
-        //     const result = await userDetailsCollection.updateOne(filter, updateDoc, options);
-        //     res.send(result)
-        // })
-        app.put('userdetail', async (req, res) => {
-            const user = req.body;
-            const result = await userDetailsCollection.insertOne(user)
+        app.put('userdetail/:id', async (req, res) => {
+            const id = req.params.id;
+            const updateUser = req.body;
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true }
+            const updateDoc = {
+                $set: {
+                    name: updateUser.name,
+                    email: updateUser.email,
+                    education: updateUser.education,
+                    location: updateUser.location,
+                    link: updateUser.link
+                }
+            };
+            const result = await userDetailsCollection.updateOne(filter, updateDoc, options);
             res.send(result)
         })
+        // app.put('userdetail', async (req, res) => {
+        //     const user = req.body;
+        //     const result = await userDetailsCollection.insertOne(user)
+        //     res.send(result)
+        // })
 
     }
     finally {
