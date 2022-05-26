@@ -33,18 +33,18 @@ function verifyJWT(req, res, next) {
 }
 
 function sendPaymentConfirmationEmail(order) {
-    const { email, name, treatment, date, slot } = order;
+    const { email, name, description, price } = order;
 
     var order = {
         from: process.env.EMAIL_SENDER,
         to: email,
-        subject: `Your Appointment for ${treatment} is confirmed`,
-        text: `Your Appointment for ${treatment} is confirmed`,
+        subject: `Your order for ${name} is confirmed`,
+        text: `Your order for ${name} is confirmed`,
         html: `
         <div>
         <p>Hello ${name},</p>
-        <h3>Your appoinment ${treatment} is confirmed</h3>
-        <p>Loking forward to seeying you you on ${date} as ${slot}</p>
+        <h3>Your order ${name} is confirmed</h3>
+        <p>Loking forward to seeying you you on ${price}</p>
         <h3>Our address</h3>
         <p>andor killa bandorban</p>
         <p>bangledesh</p>
