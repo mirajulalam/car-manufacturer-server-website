@@ -119,6 +119,12 @@ async function run() {
             return res.send(orders)
         });
 
+        // get all orders
+        app.get('/orderes', async (req, res) => {
+            const order = await ordersCollection.find().toArray();
+            res.send(order)
+        })
+
 
         // get specific order
         app.get("/orders/:id", async (req, res) => {
