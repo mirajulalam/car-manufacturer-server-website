@@ -120,7 +120,7 @@ async function run() {
         });
 
         // get all orders
-        app.get('/orderes', async (req, res) => {
+        app.get('/allOrder', async (req, res) => {
             const order = await ordersCollection.find().toArray();
             res.send(order)
         })
