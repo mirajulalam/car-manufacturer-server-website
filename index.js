@@ -104,6 +104,14 @@ async function run() {
             res.send(result)
         });
 
+        // handle admin order delete
+        app.delete('/order/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await ordersCollection.deleteOne(query)
+            res.send(result)
+        });
+
         // products order successful
         app.post("/order", async (req, res) => {
             const product = req.body;
@@ -124,7 +132,6 @@ async function run() {
             const order = await ordersCollection.find().toArray();
             res.send(order)
         })
-
 
         // get specific order
         app.get("/orders/:id", async (req, res) => {
