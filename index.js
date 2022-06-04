@@ -128,7 +128,7 @@ async function run() {
         });
 
         // get all orders
-        app.get('/allOrder', async (req, res) => {
+        app.get('/allOrder',verifyJWT, async (req, res) => {
             const order = await ordersCollection.find().toArray();
             res.send(order)
         })
@@ -161,7 +161,6 @@ async function run() {
             const result = await reviewsCollection.find().toArray();
             res.send(result)
         })
-
 
         // get user
         app.get('/user', async (req, res) => {
